@@ -1,4 +1,4 @@
-public class Queen extends ChessPiece {
+public class Queen extends WalkingFarPiece {
 
     public Queen(String color) {
         super(color);
@@ -13,7 +13,11 @@ public class Queen extends ChessPiece {
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
         if (!chessBoard.checkPos(toLine) || !chessBoard.checkPos(toColumn) || toLine == line && toColumn == column)
             return false;
-        return toLine == line || toColumn == column || Math.abs(toLine - line) == Math.abs(toColumn - column);
+        if (chessBoard.board[toLine][toColumn] != null && chessBoard.board[toLine][toColumn].color.equals(this.color))
+            return false;
+
+        return (toLine == line || toColumn == column) && isHVFree(chessBoard, line, column, toLine, toColumn)
+                || (Math.abs(toLine - line) == Math.abs(toColumn - column) && isDiagonalFree(chessBoard, line, column, toLine, toColumn));
     }
 
     @Override

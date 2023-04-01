@@ -12,21 +12,42 @@ public class ChessBoard {
 
     public boolean moveToPosition(int startLine, int startColumn, int endLine, int endColumn) {
         if (checkPos(startLine) && checkPos(startColumn)) {
-
             if (!nowPlayer.equals(board[startLine][startColumn].getColor())) return false;
 
             if (board[startLine][startColumn].canMoveToPosition(this, startLine, startColumn, endLine, endColumn)) {
 
-                if (board[startLine][startColumn].getSymbol().equals("K") ||  // check position for castling
-                        board[startLine][startColumn].getSymbol().equals("R")) {
+                if (board[startLine][startColumn] instanceof King // check position for castling
+                        || board[startLine][startColumn] instanceof Rook)
                     board[startLine][startColumn].check = false;
-                }
 
+                if (board[startLine][startColumn] instanceof Pawn
+                        && (board[startLine][startColumn].color.equals("White") && endLine == 7
+                        || board[startLine][startColumn].color.equals("Black") && endLine == 0))
+                    board[startLine][startColumn] = new Queen(nowPlayer);
+
+                ChessPiece captured = board[endLine][endColumn];
                 board[endLine][endColumn] = board[startLine][startColumn]; // if piece can move, we moved a piece
                 board[startLine][startColumn] = null; // set null to previous cell
+
+                for (int i = 0; i < board.length; i++) {
+                    for (int j = 0; j < board[i].length; j++) {
+                        ChessPiece piece = board[i][j];
+                        if (piece instanceof King
+                                && ((King) piece).isUnderAttack(this, i, j)) {
+                            if (piece.color.equals(nowPlayer)) {
+                                board[startLine][startColumn] = board[endLine][endColumn];
+                                board[endLine][endColumn] = captured;
+                                System.out.println("Your king is in check!");
+                                return false;
+                            } else System.out.println("Check!");
+                        } else if (piece instanceof Pawn && piece.color.equals(nowPlayer)) {
+                            ((Pawn) piece).removeEnPassant();
+                        }
+                    }
+                }
+
                 this.nowPlayer = this.nowPlayerColor().equals("White") ? "Black" : "White";
 
-                board[endLine][endColumn].check = false;
                 return true;
             } else return false;
         } else return false;
@@ -60,7 +81,7 @@ public class ChessBoard {
     public boolean castling0() {
         if (nowPlayer.equals("White")) {
             if (board[0][0] == null || board[0][4] == null) return false;
-            if (board[0][0].getSymbol().equals("R") && board[0][4].getSymbol().equals("K") && // check that King and Rook
+            if (board[0][0] instanceof Rook && board[0][4] instanceof King && // check that King and Rook
                     board[0][1] == null && board[0][2] == null && board[0][3] == null) {              // never moved
                 if (board[0][0].getColor().equals("White") && board[0][4].getColor().equals("White") &&
                         board[0][0].check && board[0][4].check &&
@@ -77,7 +98,7 @@ public class ChessBoard {
             } else return false;
         } else {
             if (board[7][0] == null || board[7][4] == null) return false;
-            if (board[7][0].getSymbol().equals("R") && board[7][4].getSymbol().equals("K") && // check that King and Rook
+            if (board[7][0] instanceof Rook && board[7][4] instanceof King && // check that King and Rook
                     board[7][1] == null && board[7][2] == null && board[7][3] == null) {              // never moved
                 if (board[7][0].getColor().equals("Black") && board[7][4].getColor().equals("Black") &&
                         board[7][0].check && board[7][4].check &&
@@ -98,7 +119,7 @@ public class ChessBoard {
     public boolean castling7() {
         if (nowPlayer.equals("White")) {
             if (board[0][7] == null || board[0][4] == null) return false;
-            if (board[0][7].getSymbol().equals("R") && board[0][4].getSymbol().equals("K") && // check that King and Rook
+            if (board[0][7] instanceof Rook && board[0][4] instanceof King && // check that King and Rook
                     board[0][5] == null && board[0][6] == null) {              // never moved
                 if (board[0][7].getColor().equals("White") && board[0][4].getColor().equals("White") &&
                         board[0][7].check && board[0][4].check &&
@@ -115,7 +136,7 @@ public class ChessBoard {
             } else return false;
         } else {
             if (board[7][7] == null || board[7][4] == null) return false;
-            if (board[7][7].getSymbol().equals("R") && board[7][4].getSymbol().equals("K") && // check that King and Rook
+            if (board[7][7] instanceof Rook && board[7][4] instanceof King && // check that King and Rook
                     board[7][5] == null && board[7][6] == null) {              // never moved
                 if (board[7][7].getColor().equals("Black") && board[7][4].getColor().equals("Black") &&
                         board[7][7].check && board[7][4].check &&

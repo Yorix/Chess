@@ -1,4 +1,4 @@
-public class Bishop extends ChessPiece {
+public class Bishop extends WalkingFarPiece {
 
     public Bishop(String color) {
         super(color);
@@ -13,8 +13,12 @@ public class Bishop extends ChessPiece {
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
         if (!chessBoard.checkPos(toLine) || !chessBoard.checkPos(toColumn) || toLine == line)
             return false;
-        
-        return Math.abs(toLine - line) == Math.abs(toColumn - column);
+        if (chessBoard.board[toLine][toColumn] != null && chessBoard.board[toLine][toColumn].color.equals(this.color))
+            return false;
+
+        return isDiagonalFree(chessBoard, line, column, toLine, toColumn)
+                && (chessBoard.board[toLine][toColumn] == null
+                || !chessBoard.board[toLine][toColumn].getColor().equals(this.color));
     }
 
     @Override
