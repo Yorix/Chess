@@ -1,3 +1,5 @@
+package com.yorix.chess;
+
 public class Queen extends WalkingFarPiece {
 
     public Queen(String color) {

@@ -1,3 +1,5 @@
+package com.yorix.chess;
+
 public class Rook extends WalkingFarPiece {
 
     public Rook(String color) {

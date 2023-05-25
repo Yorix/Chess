@@ -1,6 +1,8 @@
-public class Horse extends ChessPiece {
+package com.yorix.chess;
 
-    public Horse(String color) {
+public class Bishop extends WalkingFarPiece {
+
+    public Bishop(String color) {
         super(color);
     }
 
@@ -11,16 +13,18 @@ public class Horse extends ChessPiece {
 
     @Override
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
-        if (!chessBoard.checkPos(toLine) || !chessBoard.checkPos(toColumn))
+        if (!chessBoard.checkPos(toLine) || !chessBoard.checkPos(toColumn) || toLine == line)
             return false;
         if (chessBoard.board[toLine][toColumn] != null && chessBoard.board[toLine][toColumn].color.equals(this.color))
             return false;
-        return Math.abs(toLine - line) == 2 && Math.abs(toColumn - column) == 1
-                || Math.abs(toLine - line) == 1 && Math.abs(toColumn - column) == 2;
+
+        return isDiagonalFree(chessBoard, line, column, toLine, toColumn)
+                && (chessBoard.board[toLine][toColumn] == null
+                || !chessBoard.board[toLine][toColumn].getColor().equals(this.color));
     }
 
     @Override
     public String getSymbol() {
-        return "H";
+        return "B";
     }
 }

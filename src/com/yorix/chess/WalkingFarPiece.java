@@ -1,3 +1,5 @@
+package com.yorix.chess;
+
 public abstract class WalkingFarPiece extends ChessPiece {
     public WalkingFarPiece(String color) {
         super(color);

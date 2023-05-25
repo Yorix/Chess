@@ -1,3 +1,5 @@
+package com.yorix.chess;
+
 public abstract class ChessPiece {
     protected String color;
     protected boolean check = true;

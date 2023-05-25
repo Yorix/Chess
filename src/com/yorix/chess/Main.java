@@ -1,3 +1,5 @@
+package com.yorix.chess;
+
 import java.util.Scanner;
 
 public class Main {
